@@ -399,6 +399,7 @@ export const AdminDashboard = () => {
         isOpen={isEmployeeModalOpen}
         onClose={() => setIsEmployeeModalOpen(false)}
         employees={employees}
+        tasks={tasks}
         onEmployeeCreated={fetchEmployees}
       />
     </div>
