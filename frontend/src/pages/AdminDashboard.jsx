@@ -6,6 +6,7 @@ import { PriorityBadge } from '../components/PriorityBadge';
 import { Pagination } from '../components/Pagination';
 import { TaskModal } from '../components/TaskModal';
 import { EmployeeModal } from '../components/EmployeeModal';
+import { TaskDetailModal } from '../components/TaskDetailModal';
 import {
   getAdminTasksApi,
   getTaskStatsApi,
@@ -26,6 +27,7 @@ import {
   Trash2,
   RefreshCw,
   Mail,
+  Eye,
 } from 'lucide-react';
 
 export const AdminDashboard = () => {
@@ -53,6 +55,7 @@ export const AdminDashboard = () => {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isEmployeeModalOpen, setIsEmployeeModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedDetailTask, setSelectedDetailTask] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
 
   const showToast = (msg) => {
@@ -354,6 +357,13 @@ export const AdminDashboard = () => {
                       </td>
                       <td className="py-4 px-4 whitespace-nowrap text-right space-x-2">
                         <button
+                          onClick={() => setSelectedDetailTask(task)}
+                          className="p-1.5 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition"
+                          title="View Task Details"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button
                           onClick={() => openEditModal(task)}
                           className="p-1.5 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition"
                           title="Edit Task"
@@ -401,6 +411,14 @@ export const AdminDashboard = () => {
         employees={employees}
         tasks={tasks}
         onEmployeeCreated={fetchEmployees}
+      />
+
+      <TaskDetailModal
+        isOpen={!!selectedDetailTask}
+        onClose={() => setSelectedDetailTask(null)}
+        task={selectedDetailTask}
+        isAdmin={true}
+        onEditTask={openEditModal}
       />
     </div>
   );

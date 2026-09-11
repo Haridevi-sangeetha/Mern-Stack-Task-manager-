@@ -4,6 +4,7 @@ import { StatCard } from '../components/StatCard';
 import { StatusBadge } from '../components/StatusBadge';
 import { PriorityBadge } from '../components/PriorityBadge';
 import { Pagination } from '../components/Pagination';
+import { TaskDetailModal } from '../components/TaskDetailModal';
 import { getEmployeeTasksApi, updateTaskStatusApi, getTaskStatsApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -16,6 +17,7 @@ import {
   Mail,
   Calendar,
   AlertCircle,
+  Eye,
 } from 'lucide-react';
 
 export const EmployeeDashboard = () => {
@@ -42,6 +44,7 @@ export const EmployeeDashboard = () => {
 
   const [updatingTaskId, setUpdatingTaskId] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
+  const [selectedDetailTask, setSelectedDetailTask] = useState(null);
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -90,6 +93,9 @@ export const EmployeeDashboard = () => {
       setUpdatingTaskId(taskId);
       await updateTaskStatusApi(taskId, newStatus);
       showToast(`Status updated to "${newStatus}". Notification email sent to Admin!`);
+      if (selectedDetailTask && selectedDetailTask._id === taskId) {
+        setSelectedDetailTask((prev) => ({ ...prev, status: newStatus }));
+      }
       fetchTasks();
       fetchStats();
     } catch (err) {
@@ -117,7 +123,7 @@ export const EmployeeDashboard = () => {
             Welcome back, {user?.name || 'Employee'}! 👋
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            View your assigned deliverables, update task progress, and notify management automatically.
+            View your assigned deliverables, update task progress, and click any card to inspect full details.
           </p>
         </div>
 
@@ -218,16 +224,24 @@ export const EmployeeDashboard = () => {
             {tasks.map((task) => (
               <div
                 key={task._id}
-                className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition"
+                onClick={() => setSelectedDetailTask(task)}
+                className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-lg hover:border-indigo-300 transition cursor-pointer group relative"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <PriorityBadge priority={task.priority} />
-                    <StatusBadge status={task.status} />
+                    <div className="flex items-center space-x-2">
+                      <StatusBadge status={task.status} />
+                      <span className="opacity-0 group-hover:opacity-100 transition text-indigo-600 bg-indigo-50 p-1 rounded-lg" title="Click card to view details">
+                        <Eye className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
                   </div>
 
-                  <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug">{task.title}</h3>
-                  <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug group-hover:text-indigo-600 transition">
+                    {task.title}
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed mb-4 line-clamp-3">
                     {task.description || 'No detailed description provided.'}
                   </p>
                 </div>
@@ -242,15 +256,19 @@ export const EmployeeDashboard = () => {
                   </div>
 
                   {/* Status Selector */}
-                  <div>
+                  <div onClick={(e) => e.stopPropagation()}>
                     <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1 tracking-wider">
                       Update Status
                     </label>
                     <select
                       value={task.status}
                       disabled={updatingTaskId === task._id}
-                      onChange={(e) => handleStatusChange(task._id, e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl glass-input text-xs font-semibold focus:ring-2 focus:ring-indigo-500/20"
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        handleStatusChange(task._id, e.target.value);
+                      }}
+                      className="w-full px-3 py-2 rounded-xl glass-input text-xs font-semibold focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
                     >
                       <option value="Not Started">Not Started</option>
                       <option value="Pending">Pending</option>
@@ -273,6 +291,15 @@ export const EmployeeDashboard = () => {
             onPageChange={(newPage) => setPage(newPage)}
           />
         </div>
+
+        {/* Task Detail Modal */}
+        <TaskDetailModal
+          isOpen={!!selectedDetailTask}
+          onClose={() => setSelectedDetailTask(null)}
+          task={selectedDetailTask}
+          onStatusChange={handleStatusChange}
+          isUpdating={updatingTaskId === selectedDetailTask?._id}
+        />
       </main>
     </div>
   );
