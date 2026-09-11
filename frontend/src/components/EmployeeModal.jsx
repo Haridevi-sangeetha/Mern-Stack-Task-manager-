@@ -34,6 +34,28 @@ export const EmployeeModal = ({ isOpen, onClose, employees = [], tasks = [], onE
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const handleClose = () => {
+    setSelectedEmployee(null);
+    setActiveTab('list');
+    setError('');
+    setSuccess('');
+    onClose();
+  };
+
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleCreate = async (e) => {
@@ -80,11 +102,19 @@ export const EmployeeModal = ({ isOpen, onClose, employees = [], tasks = [], onE
   const completionRate = totalTaskCount > 0 ? Math.round((completedCount / totalTaskCount) * 100) : 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white w-full max-w-2xl rounded-2xl border border-slate-200 shadow-2xl p-6 relative">
+    <div
+      onClick={handleClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fadeIn cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white w-full max-w-2xl rounded-2xl border border-slate-200 shadow-2xl p-6 relative cursor-default"
+      >
         <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-100 transition"
+          type="button"
+          onClick={handleClose}
+          className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-1 rounded-lg hover:bg-slate-100 transition cursor-pointer"
+          aria-label="Close modal"
         >
           <X className="w-5 h-5" />
         </button>
@@ -93,8 +123,9 @@ export const EmployeeModal = ({ isOpen, onClose, employees = [], tasks = [], onE
         {selectedEmployee ? (
           <div>
             <button
+              type="button"
               onClick={() => setSelectedEmployee(null)}
-              className="flex items-center text-xs font-bold text-indigo-600 hover:text-indigo-700 mb-4 group"
+              className="flex items-center text-xs font-bold text-indigo-600 hover:text-indigo-700 mb-4 group cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4 mr-1 group-hover:-translate-x-0.5 transition-transform" />
               Back to Employee Directory
