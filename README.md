@@ -47,10 +47,10 @@ npm run dev
 
 ## Default Login Credentials
 
-- **Admin**: `admin@xplore.com` / `admin123`
-- **Employee 1**: `john@xplore.com` / `user123`
-- **Employee 2**: `jane@xplore.com` / `user123`
-- **Employee 3**: `alex@xplore.com` / `user123`
+- **Admin**: `admin@xplore.com` / `Admin@12345`
+- **Employee 1**: `hari@xplore.com` / `User@12345`
+- **Employee 2**: `jane@xplore.com` / `User@12345`
+- **Employee 3**: `alex@xplore.com` / `User@12345`
 
 ---
 

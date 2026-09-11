@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Shield, User, Lock, Mail, CheckSquare, ArrowRight, AlertCircle } from 'lucide-react';
 
 export const Login = () => {
-  const [role, setRole] = useState('Admin');
+  const [role, setRole] = useState('Admin'); // 'Admin' | 'Employee'
   const [email, setEmail] = useState('admin@xplore.com');
   const [password, setPassword] = useState('Admin@12345');
   const [localError, setLocalError] = useState('');
@@ -20,7 +20,7 @@ export const Login = () => {
       setEmail('admin@xplore.com');
       setPassword('Admin@12345');
     } else {
-      setEmail('john@xplore.com');
+      setEmail('hari@xplore.com');
       setPassword('User@12345');
     }
   };
@@ -81,7 +81,7 @@ export const Login = () => {
           <p className="text-xs text-slate-500 mt-1">Authentication Portal</p>
         </div>
 
-        {/* Card */}
+        {/* Form Container */}
         <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-lg">
           {/* Role Tabs */}
           <div className="grid grid-cols-2 p-1 rounded-2xl bg-slate-100 border border-slate-200 mb-6">
@@ -169,7 +169,7 @@ export const Login = () => {
           <div className="mt-6 pt-4 border-t border-slate-100 text-[11px] text-slate-500 space-y-1">
             <p className="font-semibold text-slate-700">Default Accounts:</p>
             <p>Admin: admin@xplore.com | Admin@12345</p>
-            <p>Employee: john@xplore.com | User@12345</p>
+            <p>Employee: hari@xplore.com | User@12345</p>
           </div>
         </div>
       </div>

@@ -25,9 +25,9 @@ const seedDB = async () => {
       designation: 'Project Lead',
     });
 
-    const john = await User.create({
-      name: 'John Doe',
-      email: 'john@xplore.com',
+    const hari = await User.create({
+      name: 'Hari',
+      email: 'hari@xplore.com',
       password: 'User@12345',
       role: 'Employee',
       department: 'Development',
@@ -57,7 +57,7 @@ const seedDB = async () => {
       {
         title: 'Design Dashboard UI',
         description: 'Create responsive layout for task management dashboard',
-        assignedEmployee: john._id,
+        assignedEmployee: hari._id,
         assignedBy: admin._id,
         priority: 'High',
         status: 'In Progress',
@@ -84,7 +84,7 @@ const seedDB = async () => {
       {
         title: 'Fix Navigation Bar Alignment',
         description: 'Adjust mobile menu items and profile badge spacing',
-        assignedEmployee: john._id,
+        assignedEmployee: hari._id,
         assignedBy: admin._id,
         priority: 'Low',
         status: 'Not Started',
@@ -94,7 +94,7 @@ const seedDB = async () => {
 
     console.log('Database seeded successfully with strong credentials.');
     console.log('Admin login: admin@xplore.com / Admin@12345');
-    console.log('Employee login: john@xplore.com / User@12345');
+    console.log('Employee login: hari@xplore.com / User@12345');
     process.exit(0);
   } catch (err) {
     console.error('Failed to seed database:', err);
